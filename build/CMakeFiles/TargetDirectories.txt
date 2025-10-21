@@ -1,0 +1,3 @@
+/home/dk/MemoryPool/build/CMakeFiles/Pool.dir
+/home/dk/MemoryPool/build/CMakeFiles/edit_cache.dir
+/home/dk/MemoryPool/build/CMakeFiles/rebuild_cache.dir

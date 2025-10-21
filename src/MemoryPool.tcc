@@ -12,6 +12,7 @@ MemoryPool::MemoryPool(size_t BlockSize)
     , freeListHead_(nullptr)
 {}
 
+
 // 析构函数 遍历 删除指针
 MemoryPool::~MemoryPool() {
     Slot* cur = blockListHead_;
@@ -96,8 +97,6 @@ size_t MemoryPool::padPointer(char* p, size_t align) {
     return (align - result) % align;
 }
 
-MemoryPool HashBucket::memoryPool[MEMORY_POOL_NUM]; // 定义并默认构造
-
 void HashBucket::initMemoryPool() {
     for (int i = 0; i < MEMORY_POOL_NUM; ++i) {
         // 这里最多到 512 字节 如果超过 512 字节就直接用 new/malloc 这些系统调用
@@ -107,7 +106,8 @@ void HashBucket::initMemoryPool() {
 }
 
 MemoryPool& HashBucket::getMemoryPool(int index) {
-    return memoryPool[index];
+    static MemoryPool memoryPool[MEMORY_POOL_NUM];
+    return pools_[index];
 }
 
 

@@ -4,6 +4,7 @@
 #include <utility>
 #include <mutex>    
 #include <cstdint>  
+#include <cassert>
 
 namespace Pool 
 {
@@ -16,7 +17,7 @@ namespace Pool
 class MemoryPool
 {
 public:
-    MemoryPool(size_t BlockSize);
+    MemoryPool(size_t BlockSize = 4096);
     ~MemoryPool();
 
     void init(size_t slotSize);
@@ -40,7 +41,7 @@ private:
 
     Slot*                   blockListHead_;      // 最近分配的内存块链表头
     Slot*                   currentBlockEnd_;    // 当前块中最后一个可用 slot 的下一个位置 类似于 iterator 中的 end()
-    std::atomic<Slot*>      nextAvailableSlot_;  // 当前块中下一个可分配的 slot
+    Slot*                   nextAvailableSlot_;  // 当前块中下一个可分配的 slot
     Slot*                   freeListHead_;       // 空闲链表头，回收的 slot
     
     std::mutex              mutexForFreeList_;
@@ -64,7 +65,7 @@ public:
     // size 大小
     static void freeMemory(void* ptr, size_t size);
 private:
-    static MemoryPool memoryPool[MEMORY_POOL_NUM];
+    static MemoryPool pools_[MEMORY_POOL_NUM];
 
     // 通过声明为模板友元函数 兼顾模板T和对类内私有成员的访问权限
     template<typename T, typename... Args>
@@ -98,6 +99,6 @@ void deleteElement(T* p) {
     }
 }
 
-#include "../src/memoryPool.tcc"
+#include "../src/MemoryPool.tcc"
 
-}
+} // namespaces Pool
