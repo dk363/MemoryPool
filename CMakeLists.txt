@@ -1,28 +1,24 @@
-# CMake minimum version
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
+project(MemoryPoolTest VERSION 1.0.0 LANGUAGES CXX)
 
-# Project name
-project(Pool)
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+# 编译选项 - 添加调试信息和优化
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g -Wall -Wextra -pedantic -pthread")
 
-# Include directories
-include_directories(include)
+# 主测试程序
+add_executable(MemoryPoolTest
+    tests/UnitTest.cpp
+    src/MemoryPool.cpp
+)
 
-# Source files
-file(GLOB SRC_FILES "src/*.cpp")
-file(GLOB TEST_FILES "tests/*.cpp")
+# 设置头文件目录
+target_include_directories(MemoryPoolTest PRIVATE include)
 
-# Add the executable for the main target
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${TEST_FILES})
-
-# Add compile options
-target_compile_options(${PROJECT_NAME} PRIVATE -g -pthread)
-
-# Link libraries
-target_link_libraries(${PROJECT_NAME} pthread)
-
-# Link libraries (if any)
-# target_link_libraries(${PROJECT_NAME} <library_name>)
+# 链接线程库
+find_package(Threads REQUIRED)
+target_link_libraries(MemoryPoolTest Threads::Threads)

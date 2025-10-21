@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Pool.dir/src/MemoryPool.cpp.o"
+  "CMakeFiles/Pool.dir/src/MemoryPool.cpp.o.d"
   "CMakeFiles/Pool.dir/tests/UnitTest.cpp.o"
   "CMakeFiles/Pool.dir/tests/UnitTest.cpp.o.d"
   "Pool"

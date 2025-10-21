@@ -1,8 +1,9 @@
-#pragma once
+#include "MemoryPool.h"
 
 namespace Pool
 {
 
+// MemoryPool 成员函数实现
 MemoryPool::MemoryPool(size_t BlockSize)
     : BlockSize_(BlockSize)
     , SlotSize_(0)
@@ -97,6 +98,9 @@ size_t MemoryPool::padPointer(char* p, size_t align) {
     return (align - result) % align;
 }
 
+// HashBucket 静态成员定义和实现
+MemoryPool HashBucket::pools_[MEMORY_POOL_NUM];  // 定义静态成员
+
 void HashBucket::initMemoryPool() {
     for (int i = 0; i < MEMORY_POOL_NUM; ++i) {
         // 这里最多到 512 字节 如果超过 512 字节就直接用 new/malloc 这些系统调用
@@ -106,7 +110,7 @@ void HashBucket::initMemoryPool() {
 }
 
 MemoryPool& HashBucket::getMemoryPool(int index) {
-    static MemoryPool memoryPool[MEMORY_POOL_NUM];
+    // 注意：这里应该返回 pools_[index]，而不是新建一个
     return pools_[index];
 }
 

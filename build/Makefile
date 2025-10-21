@@ -117,24 +117,48 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Pool
+# Target rules for targets named MemoryPoolTest
 
 # Build rule for target.
-Pool: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Pool
-.PHONY : Pool
+MemoryPoolTest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MemoryPoolTest
+.PHONY : MemoryPoolTest
 
 # fast build rule for target.
-Pool/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Pool.dir/build.make CMakeFiles/Pool.dir/build
-.PHONY : Pool/fast
+MemoryPoolTest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/build
+.PHONY : MemoryPoolTest/fast
+
+src/MemoryPool.o: src/MemoryPool.cpp.o
+.PHONY : src/MemoryPool.o
+
+# target to build an object file
+src/MemoryPool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/src/MemoryPool.cpp.o
+.PHONY : src/MemoryPool.cpp.o
+
+src/MemoryPool.i: src/MemoryPool.cpp.i
+.PHONY : src/MemoryPool.i
+
+# target to preprocess a source file
+src/MemoryPool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/src/MemoryPool.cpp.i
+.PHONY : src/MemoryPool.cpp.i
+
+src/MemoryPool.s: src/MemoryPool.cpp.s
+.PHONY : src/MemoryPool.s
+
+# target to generate assembly for a file
+src/MemoryPool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/src/MemoryPool.cpp.s
+.PHONY : src/MemoryPool.cpp.s
 
 tests/UnitTest.o: tests/UnitTest.cpp.o
 .PHONY : tests/UnitTest.o
 
 # target to build an object file
 tests/UnitTest.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Pool.dir/build.make CMakeFiles/Pool.dir/tests/UnitTest.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/tests/UnitTest.cpp.o
 .PHONY : tests/UnitTest.cpp.o
 
 tests/UnitTest.i: tests/UnitTest.cpp.i
@@ -142,7 +166,7 @@ tests/UnitTest.i: tests/UnitTest.cpp.i
 
 # target to preprocess a source file
 tests/UnitTest.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Pool.dir/build.make CMakeFiles/Pool.dir/tests/UnitTest.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/tests/UnitTest.cpp.i
 .PHONY : tests/UnitTest.cpp.i
 
 tests/UnitTest.s: tests/UnitTest.cpp.s
@@ -150,7 +174,7 @@ tests/UnitTest.s: tests/UnitTest.cpp.s
 
 # target to generate assembly for a file
 tests/UnitTest.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Pool.dir/build.make CMakeFiles/Pool.dir/tests/UnitTest.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MemoryPoolTest.dir/build.make CMakeFiles/MemoryPoolTest.dir/tests/UnitTest.cpp.s
 .PHONY : tests/UnitTest.cpp.s
 
 # Help Target
@@ -161,7 +185,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Pool"
+	@echo "... MemoryPoolTest"
+	@echo "... src/MemoryPool.o"
+	@echo "... src/MemoryPool.i"
+	@echo "... src/MemoryPool.s"
 	@echo "... tests/UnitTest.o"
 	@echo "... tests/UnitTest.i"
 	@echo "... tests/UnitTest.s"

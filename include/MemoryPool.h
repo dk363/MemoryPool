@@ -99,6 +99,4 @@ void deleteElement(T* p) {
     }
 }
 
-#include "../src/MemoryPool.tcc"
-
-} // namespaces Pool
+} // namespace Pool

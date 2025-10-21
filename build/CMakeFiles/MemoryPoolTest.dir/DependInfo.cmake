@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/dk/MemoryPool/src/MemoryPool.cpp" "CMakeFiles/Pool.dir/src/MemoryPool.cpp.o" "gcc" "CMakeFiles/Pool.dir/src/MemoryPool.cpp.o.d"
-  "/home/dk/MemoryPool/tests/UnitTest.cpp" "CMakeFiles/Pool.dir/tests/UnitTest.cpp.o" "gcc" "CMakeFiles/Pool.dir/tests/UnitTest.cpp.o.d"
+  "/home/dk/MemoryPool/src/MemoryPool.cpp" "CMakeFiles/MemoryPoolTest.dir/src/MemoryPool.cpp.o" "gcc" "CMakeFiles/MemoryPoolTest.dir/src/MemoryPool.cpp.o.d"
+  "/home/dk/MemoryPool/tests/UnitTest.cpp" "CMakeFiles/MemoryPoolTest.dir/tests/UnitTest.cpp.o" "gcc" "CMakeFiles/MemoryPoolTest.dir/tests/UnitTest.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
