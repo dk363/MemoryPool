@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/Pool.dir/tests/UnitTest.cpp.o CMakeFiles/Pool.dir/src/MemoryPool.cpp.o -o Pool  -lpthread 
