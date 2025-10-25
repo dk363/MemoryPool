@@ -8,6 +8,9 @@ namespace Pool
 {
 constexpr size_t ALIGNMENT = 8; // 对齐数 可分配的最小缓存
 constexpr size_t MAX_BYTES = 256 * 1024; // 一个块中的总容量
+// 种类每一个 size 的list 大小都是相同的
+// 但是实际运行则不然 
+// 内存小块是要多于内存大块的
 constexpr size_t FREE_LIST_SIZE = MAX_BYTES / ALIGNMENT; // list 大小
 
 // 内存块头部信息 

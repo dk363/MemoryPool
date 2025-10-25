@@ -11,7 +11,6 @@
 namespace Pool
 {
 
-// 这里为什么不需要 锁？
 // atomic 原子操作
 struct SpanTracker {
     std::atomic<void*> spanAddr{nullptr};

@@ -58,6 +58,7 @@ void PageCache::deallocateSpan(void* ptr, size_t numPages) {
     auto it = spanMap_.find(ptr);
     if (it == spanMap_.end()) return;
 
+    // 因为上面分配逻辑中写了找到大于 numPages 的span 然后分配一部分 所以这里通过 合并减少碎片
     Span* span = it->second;
     void* nextAddr = static_cast<char*>(ptr) + numPages * PAGE_SIZE;
     auto nextIt = spanMap_.find(nextAddr);

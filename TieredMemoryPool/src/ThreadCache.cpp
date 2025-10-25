@@ -1,6 +1,9 @@
 #include "../include/ThreadCache.h"
 #include "../include/CentralCache.h"
 
+#include <cstddef>
+#include <cstdlib>
+
 namespace Pool
 {
 
@@ -12,8 +15,12 @@ void* ThreadCache::allocate(size_t size) {
         size = ALIGNMENT;
     #endif
 
+    if (size == 0) {
+        size = ALIGNMENT;
+    }
+
     if (size > MAX_BYTES) {
-        malloc(size)
+        malloc(size);
     }
 
     size_t index = SizeClass::getIndex(size);
@@ -54,10 +61,29 @@ void ThreadCache::deallocate(void* ptr, size_t size) {
     }
 }
 
-// TODO: 实现动态标准
+// 这里动态标准的效果似乎并不好
+// 判断是否需要将内存回收给中心缓存
+// bool ThreadCache::shouldReturnToCentralCache(size_t index)
+// {
+//     // 基准阈值（可调）
+//     constexpr size_t baseThreshold = 64;
+
+//     // 动态阈值：base + recent_access / factor
+//     // recent_access 越大，阈值越高（表示该 size-class 更热，应保留更多）
+//     size_t dynamicThreshold = baseThreshold + (allocCount_[index] / 64);
+
+//     // 为避免过大，可以加个上限（可选）
+//     constexpr size_t maxThreshold = 1024;
+//     if (dynamicThreshold > maxThreshold) dynamicThreshold = maxThreshold;
+
+//     return (freeListSize_[index] > dynamicThreshold);
+// }
+// 我使用了 struct 为 list 记录了 初始化计数
+// 最大的 freelist 大小
+// 但是在实际应用中 小块的缓存list 应该更大一些
 bool ThreadCache::shouldReturnToCentralCache(size_t index) {
-    size_t threshold = 256;
-    return (freeListSize_[index] > threshold);
+    size_t maxListSize = 256;
+    return (freeListSize_[index] > maxListSize);
 }
 
 // 从中心缓存获取内存
@@ -81,7 +107,7 @@ void* ThreadCache::fetchFromCentralCache(size_t index) {
         current = *reinterpret_cast<void**>(current);
     }
 
-    // TODO: batchNum 可以改进 再 fetchRange 时可以直接告知
+    // TODO: batchNum 可以改进 在 fetchRange 时可以直接告知
     // freeListSize_ 是记录总的申请的块的数量
     freeListSize_[index] += batchNum;
 
@@ -90,44 +116,52 @@ void* ThreadCache::fetchFromCentralCache(size_t index) {
 
 // 将内存块还给 CentralCache
 void ThreadCache::returnToCentralCache(void* start, size_t size) {
+    if (start == nullptr) return;
+
     size_t index = SizeClass::getIndex(size);
 
+    // 对齐后的实际块大小
     size_t alignedSize = SizeClass::roundUp(size);
 
-    size_t batchNum = freeListSize_[index];
+    size_t actualCount = 0;
+    void* cur = start;
+    while (cur != nullptr) {
+        ++actualCount;
+        cur = *reinterpret_cast<void**>(cur);
+    }
+
+    size_t batchNum = actualCount;
     
     // 如果只有一个块 则不归还
     if (batchNum <= 1) return; 
 
     // 保留 1 / 4 
     size_t keepNum = std::max(batchNum / 4, size_t(1));
-    size_t returnNum = batchNum - keepNum; // returnNum >= 1
 
-    char* current = static_cast<char*>(start);
-    // 要保留的最后一个节点
-    char* splitNode = current;
+    // 将内存块串成 list 并找到分割点
+    void* splitNode = start;
     for (size_t i = 0; i < keepNum - 1; ++i) {
-        splitNode = reinterpret_cast<char*>(*reinterpret_cast<void**>(splitNode));
-        
-        // 提前结束
-        // 如果注释掉这个函数 有概率发生段错误
-        // TODO: 这里为什么注释掉会有段错误
+        // 这里是不应该 return 的
         if (splitNode == nullptr) {
-            returnNum = batchNum - (i + 1);
-            break;
+            return;
         }
+        splitNode = *reinterpret_cast<void**>(splitNode);
     }
 
-    if (splitNode != nullptr) {
-        void* nextNode = *reinterpret_cast<void**>(splitNode);
-        *reinterpret_cast<void**>(splitNode) = nullptr;
+    if (splitNode == nullptr) {
+        return;
+    }
 
-        freeList_[index] = start;
-        freeListSize_[index] = keepNum;
+    void* nextNode = *reinterpret_cast<void**>(splitNode);
+    // 断开连接
+    *reinterpret_cast<void**>(splitNode) = nullptr;
+    // 头插法
+    freeList_[index] = start;
+    freeListSize_[index] = keepNum;
 
-        if (returnNum > 0 && nextNode != nullptr) {
-            CentralCache::getInstance().returnRange(void* nextNode, returnNum * alignedSize, index);
-        }
+    size_t returnNum = batchNum - keepNum;
+    if (returnNum > 0 && nextNode != nullptr) {
+        CentralCache::getInstance().returnRange(nextNode, returnNum * alignedSize, index);
     }
 }
 // TODO: 统计更改前后的用时 sh 脚本
