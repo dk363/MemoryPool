@@ -1,5 +1,7 @@
 用 cpp 实现了一个简单的内存池
 
+拼尽全力无法战胜 `new/delete`
+
 # 内存池
 
 在读了[内存管理](https://xiaolincoding.com/os/3_memory/vmem.html#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98) 一章后，我想要动手实现一个简单的内存池
